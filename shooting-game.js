@@ -162,7 +162,10 @@ const animate = () => {
                     player.score += 100;
                     scoreSpan.innerHTML = player.score;
                 } else {
-                    enemy.r -= 10;
+                    gsap.to(enemy, {
+                        r: enemy.r - 10,
+                    });
+                    // enemy.r -= 10;
                     enemySpeed += 0.013;
                     player.score += 50;
                     scoreSpan.innerHTML = player.score;
