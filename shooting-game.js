@@ -70,7 +70,7 @@ class Enemy extends Circle {
 
 // particle
 const friction = 0.99;
-const particleSpeed = 4;
+const particleSpeed = 5;
 const particleSizeMax = 3;
 class Particle extends Circle {
     constructor(x, y, r, color, directionVector) {
@@ -176,43 +176,47 @@ const animate = () => {
             cancelAnimationFrame(animationId);
             clearInterval(spawnInterver);
         }
+
         // Crash bullet to enemy
         bullets.forEach((bullet, bulletIdx) => {
             const distEnemybullet = Math.hypot(enemy.x - bullet.x, enemy.y - bullet.y);
             if (distEnemybullet < enemy.r + bulletSize + 1) {
-                // make particles
-                for (let i = 0; i < enemy.r; i++) {
-                    particles.push(
-                        new Particle(
-                            enemy.x,
-                            enemy.y,
-                            particleSizeMax * Math.random(),
-                            enemy.color,
-                            {
-                                x: (Math.random() - 0.5) * Math.random(),
-                                y: (Math.random() - 0.5) * Math.random(),
-                            } //
-                        )
-                    );
-                }
+                setTimeout(() => {
+                    // make particles
+                    for (let i = 0; i < enemy.r; i++) {
+                        particles.push(
+                            new Particle(
+                                bullet.x,
+                                bullet.y,
+                                particleSizeMax * Math.random(),
+                                enemy.color,
+                                {
+                                    x: (Math.random() - 0.5) * Math.random(),
+                                    y: (Math.random() - 0.5) * Math.random(),
+                                } //
+                            )
+                        );
+                    }
 
-                // remove bullet crashed to enemy
-                bullets.splice(bulletIdx, 1);
+                    // remove bullet crashed to enemy
+                    bullets.splice(bulletIdx, 1);
 
-                // remove or resize enemy
-                if (enemy.r < 20) {
-                    enemies.splice(enemyIdx, 1);
-                    enemySpeed += 0.02;
-                    player.score += 100;
-                    scoreSpan.innerHTML = player.score;
-                } else {
-                    gsap.to(enemy, {
-                        r: enemy.r - 10,
-                    });
-                    enemySpeed += 0.013;
-                    player.score += 50;
-                    scoreSpan.innerHTML = player.score;
-                }
+                    // remove or resize enemy
+                    if (enemy.r < 20) {
+                        enemies.splice(enemyIdx, 1);
+                        gsap.to(enemy, {
+                            r: enemy.r - 10,
+                        });
+                        enemySpeed += 0.02;
+                        player.score += 100;
+                        scoreSpan.innerHTML = player.score;
+                    } else {
+                        enemy.r -= 10;
+                        enemySpeed += 0.013;
+                        player.score += 50;
+                        scoreSpan.innerHTML = player.score;
+                    }
+                }, 0);
             }
         });
     });
