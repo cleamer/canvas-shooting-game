@@ -68,6 +68,28 @@ class Enemy extends Circle {
     }
 }
 
+// particle
+const friction = 0.99;
+const particleSpeed = 4;
+const particleSizeMax = 3;
+class Particle extends Circle {
+    constructor(x, y, r, color, directionVector) {
+        super(x, y, r, color);
+        this.dV = directionVector;
+        this.speed = particleSpeed;
+        this.alpha = 0.8;
+    }
+    update() {
+        c.save();
+        c.globalAlpha = this.alpha;
+        this.draw();
+        c.restore();
+        this.x += friction * this.speed * this.dV.x;
+        this.y += friction * this.speed * this.dV.y;
+        this.alpha -= 0.01;
+    }
+}
+
 /*
  * INSTANCE
  */
@@ -81,6 +103,9 @@ const bullets = [];
 
 // Enemies instance
 const enemies = [];
+
+// Particles instance
+const particles = [];
 
 /*
  * FUNCTIONS
@@ -155,7 +180,26 @@ const animate = () => {
         bullets.forEach((bullet, bulletIdx) => {
             const distEnemybullet = Math.hypot(enemy.x - bullet.x, enemy.y - bullet.y);
             if (distEnemybullet < enemy.r + bulletSize + 1) {
+                // make particles
+                for (let i = 0; i < enemy.r; i++) {
+                    particles.push(
+                        new Particle(
+                            enemy.x,
+                            enemy.y,
+                            particleSizeMax * Math.random(),
+                            enemy.color,
+                            {
+                                x: (Math.random() - 0.5) * Math.random(),
+                                y: (Math.random() - 0.5) * Math.random(),
+                            } //
+                        )
+                    );
+                }
+
+                // remove bullet crashed to enemy
                 bullets.splice(bulletIdx, 1);
+
+                // remove or resize enemy
                 if (enemy.r < 20) {
                     enemies.splice(enemyIdx, 1);
                     enemySpeed += 0.02;
@@ -165,13 +209,18 @@ const animate = () => {
                     gsap.to(enemy, {
                         r: enemy.r - 10,
                     });
-                    // enemy.r -= 10;
                     enemySpeed += 0.013;
                     player.score += 50;
                     scoreSpan.innerHTML = player.score;
                 }
             }
         });
+    });
+
+    // Particles
+    particles.forEach((particle, particleIdx) => {
+        if (particle.alpha < 0) particles.splice(particleIdx, 1);
+        else particle.update();
     });
 };
 animate();
