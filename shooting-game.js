@@ -51,7 +51,7 @@ class Bullet extends Circle {
 }
 
 // enemy
-const enemySpeed = 1.4;
+let enemySpeed = 1.4;
 const enemySizeMin = 30;
 const enemySizeMax = 10;
 class Enemy extends Circle {
@@ -144,7 +144,7 @@ const animate = () => {
     enemies.forEach((enemy, enemyIdx) => {
         enemy.update();
 
-        // crash enemy to player -> Game Over
+        // Crash enemy to player -> Game Over
         const distEnemyPlayer = Math.hypot(enemy.x - playerLoc.x, enemy.y - playerLoc.y);
         if (distEnemyPlayer < enemy.r + playerSize + 1) {
             cancelAnimationFrame(animationId);
@@ -154,9 +154,16 @@ const animate = () => {
         bullets.forEach((bullet, bulletIdx) => {
             const distEnemybullet = Math.hypot(enemy.x - bullet.x, enemy.y - bullet.y);
             if (distEnemybullet < enemy.r + bulletSize + 1) {
-                enemies.splice(enemyIdx, 1);
                 bullets.splice(bulletIdx, 1);
-                player.score += 100;
+                if (enemy.r < 20) {
+                    enemies.splice(enemyIdx, 1);
+                    enemySpeed += 0.02;
+                    player.score += 100;
+                } else {
+                    enemy.r -= 10;
+                    enemySpeed += 0.01;
+                    player.score += 50;
+                }
             }
         });
     });
