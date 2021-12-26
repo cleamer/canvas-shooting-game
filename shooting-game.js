@@ -141,7 +141,7 @@ animate();
  */
 
 window.addEventListener("click", (e) => {
-    const directionVector = getDirection(playerLocX, playerLocY, e.clientX, e.clientY);
-    const bullet = new Bullet(playerLocX, playerLocY, bulletSize, bulletColor, directionVector);
+    const directionVector = getDirection(playerLoc.x, playerLoc.y, e.clientX, e.clientY);
+    const bullet = new Bullet(playerLoc.x, playerLoc.y, bulletSize, bulletColor, directionVector);
     bullets.push(bullet);
 });
