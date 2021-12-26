@@ -144,11 +144,21 @@ const animate = () => {
     enemies.forEach((enemy, enemyIdx) => {
         enemy.update();
 
+        // crash enemy to player -> Game Over
         const distEnemyPlayer = Math.hypot(enemy.x - playerLoc.x, enemy.y - playerLoc.y);
-        if (distEnemyPlayer < enemy.r + playerSize) {
+        if (distEnemyPlayer < enemy.r + playerSize + 1) {
             cancelAnimationFrame(animationId);
             clearInterval(spawnInterver);
         }
+        // Crash bullet to enemy
+        bullets.forEach((bullet, bulletIdx) => {
+            const distEnemybullet = Math.hypot(enemy.x - bullet.x, enemy.y - bullet.y);
+            if (distEnemybullet < enemy.r + bulletSize + 1) {
+                enemies.splice(enemyIdx, 1);
+                bullets.splice(bulletIdx, 1);
+                player.score += 100;
+            }
+        });
     });
 };
 animate();
