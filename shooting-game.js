@@ -127,6 +127,16 @@ const animate = () => {
     // bullets
     bullets.forEach((bullet, bulletIdx) => {
         bullet.update();
+
+        // remove bullets out of canvas
+        if (
+            bullet.x - bulletSize < 0 ||
+            bullet.x + bulletSize > canvas.width ||
+            bullet.y - bulletSize < 0 ||
+            bullet.y + bulletSize > canvas.height //
+        ) {
+            bullets.splice(bulletIdx, 1);
+        }
     });
 
     // enemies
