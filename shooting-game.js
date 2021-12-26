@@ -114,8 +114,9 @@ const spawnEnemies = () => {
 spawnEnemies();
 
 const backgroundColor = "rgba(0,0,0,0.1)";
+let animationId = null;
 const animate = () => {
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
 
     // background
     c.fillStyle = backgroundColor;
@@ -142,6 +143,12 @@ const animate = () => {
     // enemies
     enemies.forEach((enemy, enemyIdx) => {
         enemy.update();
+
+        const distEnemyPlayer = Math.hypot(enemy.x - playerLoc.x, enemy.y - playerLoc.y);
+        if (distEnemyPlayer < enemy.r + playerSize) {
+            cancelAnimationFrame(animationId);
+            clearInterval(spawnInterver);
+        }
     });
 };
 animate();
