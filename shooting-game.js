@@ -1,4 +1,5 @@
 "use strict";
+const scoreSpan = document.getElementById("score-span");
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -159,10 +160,12 @@ const animate = () => {
                     enemies.splice(enemyIdx, 1);
                     enemySpeed += 0.02;
                     player.score += 100;
+                    scoreSpan.innerHTML = player.score;
                 } else {
                     enemy.r -= 10;
-                    enemySpeed += 0.01;
+                    enemySpeed += 0.013;
                     player.score += 50;
+                    scoreSpan.innerHTML = player.score;
                 }
             }
         });
