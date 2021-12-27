@@ -1,7 +1,7 @@
 "use strict";
 // DOM element
 const inGameScoreSpan = document.getElementById("in-game-score");
-const popUpDiv = document.getElementById("pop-up-div");
+const scoreDiv = document.getElementById("score-div");
 const scoreResultH1 = document.getElementById("game-score");
 const startBtn = document.getElementById("start-btn");
 const saveBtn = document.getElementById("save-btn");
@@ -130,7 +130,7 @@ const getDirection = (fromX, fromY, toX, toY) => {
 };
 
 const init = () => {
-    popUpDiv.classList.add(HIDDEN);
+    scoreDiv.classList.add(HIDDEN);
     inGameScoreSpan.innerHTML = 0;
     player.score = 0;
     bullets = [];
@@ -198,7 +198,7 @@ const animate = () => {
             scoreResultH1.innerHTML = player.score;
             if (player.score > 0) saveBtn.classList.remove(HIDDEN);
             else saveBtn.classList.add(HIDDEN);
-            popUpDiv.classList.remove(HIDDEN);
+            scoreDiv.classList.remove(HIDDEN);
         }
 
         // Crash bullet to enemy
