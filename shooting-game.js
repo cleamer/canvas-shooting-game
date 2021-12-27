@@ -6,6 +6,9 @@ const scoreResultH1 = document.getElementById("game-score");
 const startBtn = document.getElementById("start-btn");
 const saveBtn = document.getElementById("save-btn");
 
+const loginDiv = document.getElementById("login-div");
+const loginBtn = document.getElementById("login-btn");
+
 //canvas
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -266,4 +269,14 @@ startBtn.addEventListener("click", () => {
     init();
     spawnEnemies();
     animate();
+});
+
+saveBtn.addEventListener("click", () => {
+    scoreDiv.classList.add(HIDDEN);
+    loginDiv.classList.remove(HIDDEN);
+});
+
+loginBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    console.log("Send info to server");
 });
