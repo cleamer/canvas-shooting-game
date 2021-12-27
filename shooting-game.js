@@ -9,6 +9,9 @@ const saveBtn = document.getElementById("save-btn");
 const loginDiv = document.getElementById("login-div");
 const loginBtn = document.getElementById("login-btn");
 
+const scoreBoardDiv = document.getElementById("score-board-div");
+const boardStartBtn = document.getElementById("board-start-btn");
+
 //canvas
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -255,6 +258,12 @@ const animate = () => {
     });
 };
 
+const startGame = () => {
+    init();
+    spawnEnemies();
+    animate();
+};
+
 /*
  * EVENTS
  */
@@ -265,10 +274,11 @@ window.addEventListener("click", (e) => {
     bullets.push(bullet);
 });
 
-startBtn.addEventListener("click", () => {
-    init();
-    spawnEnemies();
-    animate();
+startBtn.addEventListener("click", startGame);
+
+boardStartBtn.addEventListener("click", () => {
+    scoreBoardDiv.classList.add(HIDDEN);
+    startGame();
 });
 
 saveBtn.addEventListener("click", () => {
@@ -277,6 +287,10 @@ saveBtn.addEventListener("click", () => {
 });
 
 loginBtn.addEventListener("click", (e) => {
+    // Prototype TODO: send [nickname, password, score] to server and go to score-board-div (feat. POST -> GET)
     e.preventDefault();
     console.log("Send info to server");
+    //
+    loginDiv.classList.add(HIDDEN);
+    scoreBoardDiv.classList.remove(HIDDEN);
 });

@@ -10,6 +10,21 @@
                 margin: 0;
                 background-color: black;
             }
+            table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0 10px;
+            }
+
+            /* #score-board-div tr > td:nth-child(1) {
+                background-color: red;
+            }
+            #score-board-div tr > td:nth-child(2) {
+                background-color: blue;
+            }
+            #score-board-div tr > td:nth-child(3) {
+                background-color: green;
+            } */
         </style>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
@@ -47,6 +62,32 @@
                     />
                     <button id="login-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg mt-2">Save</button>
                 </form>
+            </div>
+            <div id="score-board-div" class="bg-white max-w-md w-full p-7 text-center rounded-md hidden">
+                <h1 class="text-4xl font-bold leading-none mb-10">Unranked</h1>
+                <table class="mb-8">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Nickname</th>
+                        <th>score</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>cloer</td>
+                        <td>1700</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>user1</td>
+                        <td>1500</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>user2</td>
+                        <td>1000</td>
+                    </tr>
+                </table>
+                <button id="board-start-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg">Game Start</button>
             </div>
         </div>
 
