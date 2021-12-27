@@ -1,9 +1,19 @@
 "use strict";
-const scoreSpan = document.getElementById("score-span");
+// DOM element
+const inGameScoreSpan = document.getElementById("in-game-score");
+const popUpDiv = document.getElementById("pop-up-div");
+const scoreResultH1 = document.getElementById("game-score");
+const startBtn = document.getElementById("start-btn");
+const saveBtn = document.getElementById("save-btn");
+
+//canvas
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
+// CSS class constant
+const HIDDEN = "hidden";
 
 /*
  * CLASS
@@ -52,7 +62,8 @@ class Bullet extends Circle {
 }
 
 // enemy
-let enemySpeed = 1.4;
+const enemySpeedInit = 1.4;
+let enemySpeed = enemySpeedInit;
 const enemySizeMin = 30;
 const enemySizeMax = 10;
 class Enemy extends Circle {
@@ -99,13 +110,13 @@ const playerLoc = { x: canvas.width / 2, y: canvas.height / 2 };
 const player = new Player(playerLoc.x, playerLoc.y, playerSize, playerColor);
 
 // Bullets instance
-const bullets = [];
+let bullets = [];
 
 // Enemies instance
-const enemies = [];
+let enemies = [];
 
 // Particles instance
-const particles = [];
+let particles = [];
 
 /*
  * FUNCTIONS
@@ -116,6 +127,16 @@ const getDirection = (fromX, fromY, toX, toY) => {
         x: Math.cos(angle),
         y: Math.sin(angle),
     };
+};
+
+const init = () => {
+    popUpDiv.classList.add(HIDDEN);
+    inGameScoreSpan.innerHTML = 0;
+    player.score = 0;
+    bullets = [];
+    enemies = [];
+    particles = [];
+    enemySpeed = enemySpeedInit;
 };
 
 let spawnInterver = null;
@@ -137,7 +158,6 @@ const spawnEnemies = () => {
         enemies.push(enemy);
     }, spawnInterverTime);
 };
-spawnEnemies();
 
 const backgroundColor = "rgba(0,0,0,0.1)";
 let animationId = null;
@@ -175,6 +195,10 @@ const animate = () => {
         if (distEnemyPlayer < enemy.r + playerSize + 1) {
             cancelAnimationFrame(animationId);
             clearInterval(spawnInterver);
+            scoreResultH1.innerHTML = player.score;
+            if (player.score > 0) saveBtn.classList.remove(HIDDEN);
+            else saveBtn.classList.add(HIDDEN);
+            popUpDiv.classList.remove(HIDDEN);
         }
 
         // Crash bullet to enemy
@@ -209,12 +233,12 @@ const animate = () => {
                         });
                         enemySpeed += 0.02;
                         player.score += 100;
-                        scoreSpan.innerHTML = player.score;
+                        inGameScoreSpan.innerHTML = player.score;
                     } else {
                         enemy.r -= 10;
                         enemySpeed += 0.013;
                         player.score += 50;
-                        scoreSpan.innerHTML = player.score;
+                        inGameScoreSpan.innerHTML = player.score;
                     }
                 }, 0);
             }
@@ -227,7 +251,6 @@ const animate = () => {
         else particle.update();
     });
 };
-animate();
 
 /*
  * EVENTS
@@ -237,4 +260,10 @@ window.addEventListener("click", (e) => {
     const directionVector = getDirection(playerLoc.x, playerLoc.y, e.clientX, e.clientY);
     const bullet = new Bullet(playerLoc.x, playerLoc.y, bulletSize, bulletColor, directionVector);
     bullets.push(bullet);
+});
+
+startBtn.addEventListener("click", () => {
+    init();
+    spawnEnemies();
+    animate();
 });
