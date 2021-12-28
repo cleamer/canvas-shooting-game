@@ -11,6 +11,7 @@ const loginBtn = document.getElementById("login-btn");
 
 const scoreBoardDiv = document.getElementById("score-board-div");
 const boardStartBtn = document.getElementById("board-start-btn");
+const scoreInput = document.querySelector("#login-div > form > input:first-child");
 
 //canvas
 const canvas = document.querySelector("canvas");
@@ -287,10 +288,7 @@ saveBtn.addEventListener("click", () => {
 });
 
 loginBtn.addEventListener("click", (e) => {
-    // Prototype TODO: send [nickname, password, score] to server and go to score-board-div (feat. POST -> GET)
-    e.preventDefault();
-    console.log("Send info to server");
-    //
     loginDiv.classList.add(HIDDEN);
     scoreBoardDiv.classList.remove(HIDDEN);
+    scoreInput.value = inGameScoreSpan.innerHTML;
 });
