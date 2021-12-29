@@ -55,6 +55,14 @@ const dbPasswordMatch = async function (connection, no, password) {
     const [scoreFromNoPw] = await connection.query(selectScoreQuery, params);
     return scoreFromNoPw;
 };
+const dbInsertPlayer = async function (connection, nickname, password, score) {
+    const params = [nickname, password, score];
+    const insertPlayerQuery = `
+    insert into Player(nickname, password, score) value (?, ?, ?);
+    `;
+    const [insertResult] = await connection.query(insertPlayerQuery, params);
+    return insertResult;
+};
 
 // Provider (GET)
 const checkNickname = async function (nickname) {
@@ -68,6 +76,12 @@ const checkPassword = async function (no, password) {
     const checkPasswordResult = await dbPasswordMatch(connection, no, password);
     connection.release();
     return checkPasswordResult[0];
+};
+const createUser = async function (nickname, password, score) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const insertPlayerResult = await dbInsertPlayer(connection, nickname, password, score);
+    connection.release();
+    return insertPlayerResult.insertId;
 };
 
 // Controller
@@ -85,23 +99,23 @@ const login = async function (req, res) {
     if (!(score0 > 0)) return res.send(errResponse(Message.NAN_SCORE));
 
     try {
-        // TODO: main logic
+        // TODO: compare with saved score and then save only high score like top 10
+        // If the nickname doen't exist save the new user's record.
         const doesNicknameExist = await checkNickname(nickname0);
         if (!doesNicknameExist) {
-            // create a new user and save
-        } else {
-            const no = doesNicknameExist.no;
-            // IF(check PW match)
-            const doesPwCorrect = await checkPassword(no, password);
-            if (!doesPwCorrect) return res.send(errResponse(Message.NOT_MATCHED_PASSWORD));
-            else {
-                const dbScore = doesPwCorrect.score;
-                if (score > dbScore) {
-                    // update score
-                } else {
-                    // Noting
-                }
-            }
+            const createRecordResult = await createUser(nickname0, password0, score0);
+            return res.send(response(Message.SUCCESS_CREATE, { insertId: createRecordResult }));
+        }
+
+        // If the password isn't that user's password send an erorr message
+        const no = doesNicknameExist.no;
+        const doesPwCorrect = await checkPassword(no, password0);
+        if (!doesPwCorrect) return res.send(errResponse(Message.NOT_MATCHED_PASSWORD));
+
+        // If a new score is higher than saved score then update the record
+        const dbScore = doesPwCorrect.score;
+        if (score0 > dbScore) {
+            // update score
         }
     } catch (error) {
         console.log(error);
