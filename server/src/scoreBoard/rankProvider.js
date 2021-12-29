@@ -14,5 +14,11 @@ const getTop10List = async function () {
     connection.release();
     return selectTop10PlayerResult;
 };
+const checkNicknameForRankingScore = async function (nickname) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const selectRankingScoreResult = await rankDao.dbSelectRankingScorePlayer(connection, nickname);
+    connection.release();
+    return selectRankingScoreResult[0];
+};
 
-module.exports = { getTop10List };
+module.exports = { getTop10List, checkNicknameForRankingScore };

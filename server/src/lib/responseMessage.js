@@ -20,6 +20,7 @@ const Message = {
     NAN_SCORE: { isSuccess: false, code: 3004, message: "Score is not a number." },
     // Wrong
     NOT_MATCHED_PASSWORD: { isSuccess: false, code: 4000, message: "It's a wrong password." },
+    NOT_MATCHED_NICKNAEM: { isSuccess: false, code: 4001, message: "There is no record by that nickname." },
     // Error
     SERVER_ERROR: { isSuccess: false, code: 5000, message: "Server Error!" },
     DB_NO_RECORD_ERROR: { isSuccess: false, code: 5001, message: "There is no record!" },
