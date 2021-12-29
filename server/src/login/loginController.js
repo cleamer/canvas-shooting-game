@@ -14,8 +14,8 @@ const login = async function (req, res) {
     // validation
     if (!nickname0) return res.send(errResponse(Message.EMPTY_NICKNAME));
     if (!password0) return res.send(errResponse(Message.EMPTY_PASSWORD));
-    if (nickname0.length < 4 || nickname0 > 8) return res.send(errResponse(Message.LENGTH_NICKNAME));
-    if (password0.length < 4 || password0 > 10) return res.send(errResponse(Message.LENGTH_PASSWORD));
+    if (nickname0.length < 4 || nickname0.length > 8) return res.send(errResponse(Message.LENGTH_NICKNAME));
+    if (password0.length < 4 || password0.length > 10) return res.send(errResponse(Message.LENGTH_PASSWORD));
     if (!(score0 > 0)) return res.send(errResponse(Message.NAN_SCORE));
 
     try {
