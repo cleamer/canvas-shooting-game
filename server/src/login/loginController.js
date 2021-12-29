@@ -20,19 +20,19 @@ const login = async function (req, res) {
 
     try {
         // If the nickname doen't exist save the new user's record.
-        const doesNicknameExistNo = await loginProvider.checkNicknameForNo(nickname0);
-        if (!doesNicknameExistNo) {
+        const doesNicknameExistForNo = await loginProvider.checkNicknameForNo(nickname0);
+        if (!doesNicknameExistForNo) {
             const createRecordResult = await loginProvider.createRecord(nickname0, password0, score0);
             return res.send(response(Message.SUCCESS_CREATE, { insertId: createRecordResult }));
         }
 
         // If the password isn't that user's password send an erorr message
-        const no = doesNicknameExistNo.no;
-        const doesPasswordCorrectScore = await loginProvider.checkPasswordForScore(no, password0);
-        if (!doesPasswordCorrectScore) return res.send(errResponse(Message.NOT_MATCHED_PASSWORD));
+        const no = doesNicknameExistForNo.no;
+        const doesPasswordCorrectForScore = await loginProvider.checkPasswordForScore(no, password0);
+        if (!doesPasswordCorrectForScore) return res.send(errResponse(Message.NOT_MATCHED_PASSWORD));
 
         // If a new score is higher than saved score then update the record
-        const dbScore = doesPasswordCorrectScore.score;
+        const dbScore = doesPasswordCorrectForScore.score;
         if (score0 > dbScore) {
             const updateRecordResult = await loginProvider.updateRecord(no, score0);
             return res.send(response(Message.SUCCESS_UPDATE, { savedScore: dbScore, newScore: score0 }));
