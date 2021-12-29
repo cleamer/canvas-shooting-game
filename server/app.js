@@ -1,8 +1,16 @@
 "use strict";
-const sanitizeHTML = require("sanitize-html");
+// Express
 const express = require("express");
 const app = express();
 const PORT = 3000;
+
+// Database
+const mysql = require("mysql2/promise");
+const myDB = require("./src/DB/DB-info");
+const pool = mysql.createPool(myDB);
+
+// Library
+const sanitizeHTML = require("sanitize-html");
 
 // Response message
 const response = ({ isSuccess, code, message }, result) => {
@@ -27,27 +35,51 @@ const Message = {
     SERVER_ERROR: { isSuccess: false, code: 5000, message: "Server Error" },
 };
 
+// Dao (query to DB)
+const dbNicknameExist = async function (connection, nickname) {
+    const selectNoQuery = `
+        select no
+        from Player
+        where nickname = ?;
+        `;
+    const [noFromNickname] = await connection.query(selectNoQuery, nickname);
+    return noFromNickname;
+};
+
+// Provider (GET)
+const checkNickname = async function (nickname) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const checkNicknameResult = await dbNicknameExist(connection, nickname);
+    connection.release();
+    return checkNicknameResult[0];
+};
+
 // Controller
 const login = async function (req, res) {
-    const { nickname0, password0, score0 } = req.body;
-    const nickname = sanitizeHTML(nickname0);
-    const password = sanitizeHTML(password0);
-    const score = parseInt(score0);
+    const { nickname, password, score } = req.body;
+    const nickname0 = sanitizeHTML(nickname);
+    const password0 = sanitizeHTML(password);
+    const score0 = parseInt(score);
 
     // validation
-    if (!nickname) return res.send(errResponse(Message.EMPTY_NICKNAME));
-    if (!password) return res.send(errResponse(Message.EMPTY_PASSWORD));
-    if (nickname.length < 4 || nickname > 8) return res.send(errResponse(Message.LENGTH_NICKNAME));
-    if (password.length < 4 || password > 10) return res.send(errResponse(Message.LENGTH_PASSWORD));
-    if (!(score > 0)) return res.send(errResponse(Message.NAN_SCORE));
+    if (!nickname0) return res.send(errResponse(Message.EMPTY_NICKNAME));
+    if (!password0) return res.send(errResponse(Message.EMPTY_PASSWORD));
+    if (nickname0.length < 4 || nickname0 > 8) return res.send(errResponse(Message.LENGTH_NICKNAME));
+    if (password0.length < 4 || password0 > 10) return res.send(errResponse(Message.LENGTH_PASSWORD));
+    if (!(score0 > 0)) return res.send(errResponse(Message.NAN_SCORE));
 
     try {
         // TODO: main logic
-        // IF(check nickname in DB)
-        // TRUE -> IF(check PW match)
-        // TRUE -> TRUE -> update score
-        // TRUE -> FALSE -> throw PW error
-        // FALSE -> create new user and save
+        const DoesNicknameExist = await checkNickname(nickname0);
+        if (DoesNicknameExist) {
+            const no = DoesNicknameExist.no;
+            console.log(no);
+            // TRUE -> IF(check PW match)
+            // TRUE -> TRUE -> update score
+            // TRUE -> FALSE -> throw PW error
+        } else {
+            // FALSE -> create new user and save
+        }
     } catch (error) {
         console.log(error);
         return res.send(errResponse(Message.SERVER_ERROR));

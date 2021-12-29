@@ -1,0 +1,9 @@
+### [POST] login 
+POST http://localhost:3000/login HTTP/1.1
+content-type: application/json
+
+{
+    "nickname": "user10",
+    "password": "password1",
+    "score": 1700
+}

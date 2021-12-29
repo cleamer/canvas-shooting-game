@@ -9,6 +9,8 @@
     "author": "cloer",
     "license": "ISC",
     "dependencies": {
-        "express": "^4.17.2"
+        "express": "^4.17.2",
+        "mysql2": "^2.3.3",
+        "sanitize-html": "^2.6.1"
     }
 }
