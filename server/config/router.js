@@ -5,6 +5,6 @@ module.exports = function (app) {
     app.post("/login", login);
 
     // TODO: get rank list
-    // const {getScoreBoard} = require();
-    // app.get('/records', getScoreBoard)
+    // const {getranks} = require();
+    // app.get('/ranks', getranks)
 };

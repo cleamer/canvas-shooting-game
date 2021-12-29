@@ -39,6 +39,8 @@ const login = async function (req, res) {
             return res.send(response(Message.SUCCESS_UPDATE, { savedScore: dbScore, newScore: score0 }));
         }
         return res.send(response(Message.SUCCESS, { savedScore: dbScore }));
+
+        //TODO: redirection -> [GET] /ranks
     } catch (error) {
         console.log(error);
         return res.send(errResponse(Message.SERVER_ERROR));
