@@ -2,8 +2,8 @@
 
 const sanitizeHTML = require("sanitize-html");
 
-const loginProvider = require("./loginProvider");
 const { response, errResponse, Message } = require("../lib/responseMessage");
+const loginProvider = require("./loginProvider");
 
 const login = async function (req, res) {
     const { nickname, password, score } = req.body;

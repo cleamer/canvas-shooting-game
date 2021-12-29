@@ -291,4 +291,7 @@ loginBtn.addEventListener("click", (e) => {
     loginDiv.classList.add(HIDDEN);
     scoreBoardDiv.classList.remove(HIDDEN);
     scoreInput.value = inGameScoreSpan.innerHTML;
+    // TODO: respose message -> elemets -> render
+    // [POST] hostname:3000/login
+    // [GET] hostname:3000/score-borad
 });

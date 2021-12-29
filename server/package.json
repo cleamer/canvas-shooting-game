@@ -1,12 +1,19 @@
 {
-    "name": "server",
+    "name": "shooting-game",
     "version": "1.0.0",
     "description": "Shooting game server to CRUD score",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cleamer/canvas-shooting-game"
+    },
     "main": "app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "author": "cloer",
+    "author": {
+        "name": "cloer",
+        "url": "https://github.com/cleamer"
+    },
     "license": "ISC",
     "dependencies": {
         "express": "^4.17.2",
