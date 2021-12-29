@@ -8,13 +8,13 @@ const pool = mysql.createPool(myDB);
 // Dao
 const loginDao = require("./loginDao");
 
-const checkNickname = async function (nickname) {
+const checkNicknameForNo = async function (nickname) {
     const connection = await pool.getConnection(async (conn) => conn);
     const checkNicknameResult = await loginDao.dbNicknameExist(connection, nickname);
     connection.release();
     return checkNicknameResult[0];
 };
-const checkPassword = async function (no, password) {
+const checkPasswordForScore = async function (no, password) {
     const connection = await pool.getConnection(async (conn) => conn);
     const checkPasswordResult = await loginDao.dbPasswordMatch(connection, no, password);
     connection.release();
@@ -34,8 +34,8 @@ const updateRecord = async function (no, score) {
 };
 
 module.exports = {
-    checkNickname,
-    checkPassword,
+    checkNicknameForNo,
+    checkPasswordForScore,
     createRecord,
     updateRecord,
 };
