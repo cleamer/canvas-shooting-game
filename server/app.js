@@ -21,8 +21,9 @@ const errResponse = ({ isSuccess, code, message }) => {
 };
 const Message = {
     // success
-    SUCCESS_CREATE: { isSuccess: true, code: 2000, message: "It has been successed to create a new user" },
-    SUCCESS_UPDATE: { isSuccess: true, code: 2001, message: "It has been successed to update the new user" },
+    SUCCESS: { isSuccess: true, code: 2000, message: "Less than saved score." },
+    SUCCESS_CREATE: { isSuccess: true, code: 2001, message: "It has been successed to create a new user." },
+    SUCCESS_UPDATE: { isSuccess: true, code: 2002, message: "It has been successed to update the new user." },
     // validation
     EMPTY_NICKNAME: { isSuccess: false, code: 3000, message: "Nickname is required." },
     EMPTY_PASSWORD: { isSuccess: false, code: 3001, message: "Password is required." },
@@ -35,7 +36,7 @@ const Message = {
     SERVER_ERROR: { isSuccess: false, code: 5000, message: "Server Error" },
 };
 
-// Dao (query to DB)
+// Dao (send a query to DB)
 const dbNicknameExist = async function (connection, nickname) {
     const selectNoQuery = `
         select no
@@ -63,6 +64,14 @@ const dbInsertPlayer = async function (connection, nickname, password, score) {
     const [insertResult] = await connection.query(insertPlayerQuery, params);
     return insertResult;
 };
+const dbUpdatePlayer = async function (connection, no, score) {
+    const params = [score, no];
+    const updatePlayerQuery = `
+    update Player set score = ? where no = ?
+    `;
+    const [updateResult] = await connection.query(updatePlayerQuery, params);
+    return updateResult;
+};
 
 // Provider (GET)
 const checkNickname = async function (nickname) {
@@ -77,11 +86,17 @@ const checkPassword = async function (no, password) {
     connection.release();
     return checkPasswordResult[0];
 };
-const createUser = async function (nickname, password, score) {
+const createRecord = async function (nickname, password, score) {
     const connection = await pool.getConnection(async (conn) => conn);
     const insertPlayerResult = await dbInsertPlayer(connection, nickname, password, score);
     connection.release();
     return insertPlayerResult.insertId;
+};
+const updateRecord = async function (no, score) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const updatePlayerResult = await dbUpdatePlayer(connection, no, score);
+    connection.release();
+    return updatePlayerResult.info;
 };
 
 // Controller
@@ -103,7 +118,7 @@ const login = async function (req, res) {
         // If the nickname doen't exist save the new user's record.
         const doesNicknameExist = await checkNickname(nickname0);
         if (!doesNicknameExist) {
-            const createRecordResult = await createUser(nickname0, password0, score0);
+            const createRecordResult = await createRecord(nickname0, password0, score0);
             return res.send(response(Message.SUCCESS_CREATE, { insertId: createRecordResult }));
         }
 
@@ -115,8 +130,10 @@ const login = async function (req, res) {
         // If a new score is higher than saved score then update the record
         const dbScore = doesPwCorrect.score;
         if (score0 > dbScore) {
-            // update score
+            const updateRecordResult = await updateRecord(no, score0);
+            return res.send(response(Message.SUCCESS_UPDATE, { savedScore: dbScore, newScore: score0 }));
         }
+        return res.send(response(Message.SUCCESS, { savedScore: dbScore }));
     } catch (error) {
         console.log(error);
         return res.send(errResponse(Message.SERVER_ERROR));
@@ -129,6 +146,8 @@ app.use(express.json());
 
 // Route
 app.post("/login", login);
+//TODO: get score board list
+//app.get('/records', record)
 
 // Listen
 app.listen(PORT, () => {
