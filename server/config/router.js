@@ -6,5 +6,5 @@ module.exports = function (app) {
 
     const { getScoreBoard, getMyRank } = require("../src/scoreBoard/rankController");
     app.get("/score-board", getScoreBoard);
-    app.get("/my-rank", getMyRank);
+    app.get("/my-ranking", getMyRank);
 };

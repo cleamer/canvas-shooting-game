@@ -19,7 +19,6 @@ const login = async function (req, res) {
     if (!(score0 > 0)) return res.send(errResponse(Message.NAN_SCORE));
 
     try {
-        // TODO: compare with saved score and then save only high score like top 10
         // If the nickname doen't exist save the new user's record.
         const doesNicknameExist = await loginProvider.checkNickname(nickname0);
         if (!doesNicknameExist) {
@@ -38,7 +37,7 @@ const login = async function (req, res) {
             const updateRecordResult = await loginProvider.updateRecord(no, score0);
             return res.send(response(Message.SUCCESS_UPDATE, { savedScore: dbScore, newScore: score0 }));
         }
-        return res.send(response(Message.SUCCESS, { savedScore: dbScore }));
+        return res.send(response(Message.SUCCESS_LOW_SCORE, { savedScore: dbScore }));
 
         //TODO: redirection -> [GET] /ranks
     } catch (error) {
