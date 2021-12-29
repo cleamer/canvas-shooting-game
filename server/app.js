@@ -45,6 +45,16 @@ const dbNicknameExist = async function (connection, nickname) {
     const [noFromNickname] = await connection.query(selectNoQuery, nickname);
     return noFromNickname;
 };
+const dbPasswordMatch = async function (connection, no, password) {
+    const params = [no, password];
+    const selectScoreQuery = `
+        select score
+        from Player
+        where no = ? and password = ?;
+        `;
+    const [scoreFromNoPw] = await connection.query(selectScoreQuery, params);
+    return scoreFromNoPw;
+};
 
 // Provider (GET)
 const checkNickname = async function (nickname) {
@@ -52,6 +62,12 @@ const checkNickname = async function (nickname) {
     const checkNicknameResult = await dbNicknameExist(connection, nickname);
     connection.release();
     return checkNicknameResult[0];
+};
+const checkPassword = async function (no, password) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const checkPasswordResult = await dbPasswordMatch(connection, no, password);
+    connection.release();
+    return checkPasswordResult[0];
 };
 
 // Controller
@@ -70,15 +86,22 @@ const login = async function (req, res) {
 
     try {
         // TODO: main logic
-        const DoesNicknameExist = await checkNickname(nickname0);
-        if (DoesNicknameExist) {
-            const no = DoesNicknameExist.no;
-            console.log(no);
-            // TRUE -> IF(check PW match)
-            // TRUE -> TRUE -> update score
-            // TRUE -> FALSE -> throw PW error
+        const doesNicknameExist = await checkNickname(nickname0);
+        if (!doesNicknameExist) {
+            // create a new user and save
         } else {
-            // FALSE -> create new user and save
+            const no = doesNicknameExist.no;
+            // IF(check PW match)
+            const doesPwCorrect = await checkPassword(no, password);
+            if (!doesPwCorrect) return res.send(errResponse(Message.NOT_MATCHED_PASSWORD));
+            else {
+                const dbScore = doesPwCorrect.score;
+                if (score > dbScore) {
+                    // update score
+                } else {
+                    // Noting
+                }
+            }
         }
     } catch (error) {
         console.log(error);
