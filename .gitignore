@@ -1,2 +1,2 @@
 server/node_modules
-server/src/DB/DB-info.js
+server/src/lib/dbSecret.js
