@@ -14,6 +14,7 @@ const boardStartBtn = document.getElementById("board-start-btn");
 const nicknameInput = document.getElementById("nickname-input");
 const passwordInput = document.getElementById("password-input");
 const table = document.getElementById("score-board");
+const myRankH1 = document.getElementById("my-rank");
 
 //canvas
 const canvas = document.querySelector("canvas");
@@ -311,7 +312,7 @@ function drawRecord(record) {
     const tdRank = document.createElement("td");
     const tdNickname = document.createElement("td");
     const tdScore = document.createElement("td");
-    tdRank.innerHTML = record.rank;
+    tdRank.innerHTML = record.ranking;
     tdNickname.innerHTML = record.nickname;
     tdScore.innerHTML = record.score;
 
@@ -320,9 +321,6 @@ function drawRecord(record) {
 }
 
 async function loginBtnHandler() {
-    loginDiv.classList.add(HIDDEN);
-    scoreBoardDiv.classList.remove(HIDDEN);
-
     const postNickname = nicknameInput.value;
     const postPassword = passwordInput.value;
     const postScore = parseInt(inGameScoreSpan.innerHTML);
@@ -336,11 +334,13 @@ async function loginBtnHandler() {
             */
             const scoreBoardResult = await getScoreBoard();
             if (scoreBoardResult.isSuccess) {
-                /*
-                SUCCESS_READ: { isSuccess: true, code: 2003, message: "Data has been received successfully." },
-                */
+                // SUCCESS_READ: { isSuccess: true, code: 2003, message: "Data has been received successfully." },
                 const records = scoreBoardResult.result;
-                records.forEach((record) => drawRecord(record));
+                table.innerHTML = "<tr><th>Rank</th><th>Nickname</th><th>score</th></tr>";
+                records.forEach((record) => {
+                    if (record.nickname === postNickname) myRankH1.innerHTML = `Rank: ${record.ranking}`;
+                    drawRecord(record);
+                });
             } else {
                 /*
                 NOT_MATCHED_NICKNAEM: { isSuccess: false, code: 4001, message: "There is no record by that nickname." },
@@ -365,6 +365,9 @@ async function loginBtnHandler() {
         // TODO: fetch ERROR: ex) server is not running
         console.log(error);
     }
+
+    loginDiv.classList.add(HIDDEN);
+    scoreBoardDiv.classList.remove(HIDDEN);
 }
 
 loginBtn.addEventListener("click", loginBtnHandler);
