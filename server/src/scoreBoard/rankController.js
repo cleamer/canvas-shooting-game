@@ -9,7 +9,7 @@ const getScoreBoard = async function (req, res) {
     return res.send(response(Message.SUCCESS_READ, top10List));
 };
 const getMyRank = async function (req, res) {
-    const nickname = req.query.nickname;
+    const nickname = req.params.nickname;
 
     if (!nickname) return res.send(errResponse(Message.EMPTY_NICKNAME));
     if (nickname.length < 4 || nickname.length > 8) return res.send(errResponse(Message.LENGTH_NICKNAME));

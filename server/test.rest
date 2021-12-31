@@ -13,9 +13,9 @@ GET http://localhost:3000/score-board HTTP/1.1
 content-type: application/json
 
 ### [GET] my ranking
-GET http://localhost:3000/my-ranking?nickname=asdfasdfa HTTP/1.1
+GET http://localhost:3000/my-ranking/user1 HTTP/1.1
 content-type: application/json
 
 ### [GET] my ranking
-GET http://localhost:3000/my-ranking?nickname=user0 HTTP/1.1
+GET http://localhost:3000/my-ranking/user0 HTTP/1.1
 content-type: application/json
