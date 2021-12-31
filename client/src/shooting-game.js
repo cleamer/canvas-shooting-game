@@ -306,6 +306,19 @@ async function getScoreBoard() {
     const result = await res.json();
     return result;
 }
+function drawRecord(record) {
+    const tr = document.createElement("tr");
+    const tdRank = document.createElement("td");
+    const tdNickname = document.createElement("td");
+    const tdScore = document.createElement("td");
+    tdRank.innerHTML = record.rank;
+    tdNickname.innerHTML = record.nickname;
+    tdScore.innerHTML = record.score;
+
+    tr.append(tdRank, tdNickname, tdScore);
+    table.appendChild(tr);
+}
+
 async function loginBtnHandler() {
     loginDiv.classList.add(HIDDEN);
     scoreBoardDiv.classList.remove(HIDDEN);
@@ -316,28 +329,40 @@ async function loginBtnHandler() {
     try {
         const loginResult = await postLogin(postNickname, postPassword, postScore);
         if (loginResult.isSuccess) {
+            /*
+            SUCCESS_LOW_SCORE: { isSuccess: true, code: 2000, message: "Less than saved score." },
+            SUCCESS_CREATE: { isSuccess: true, code: 2001, message: "It has been successed to create a new user." },
+            SUCCESS_UPDATE: { isSuccess: true, code: 2002, message: "It has been successed to update the new user." },
+            */
             const scoreBoardResult = await getScoreBoard();
             if (scoreBoardResult.isSuccess) {
+                /*
+                SUCCESS_READ: { isSuccess: true, code: 2003, message: "Data has been received successfully." },
+                */
                 const records = scoreBoardResult.result;
-
-                records.forEach((record) => {
-                    const tr = document.createElement("tr");
-                    const tdRank = document.createElement("td");
-                    const tdNickname = document.createElement("td");
-                    const tdScore = document.createElement("td");
-                    tdRank.innerHTML = record.ranking;
-                    tdNickname.innerHTML = record.nickname;
-                    tdScore.innerHTML = record.score;
-
-                    tr.append(tdRank, tdNickname, tdScore);
-                    table.appendChild(tr);
-                });
+                records.forEach((record) => drawRecord(record));
             } else {
+                /*
+                NOT_MATCHED_NICKNAEM: { isSuccess: false, code: 4001, message: "There is no record by that nickname." },
+                DB_NO_RECORD_ERROR: { isSuccess: false, code: 5001, message: "There is no record!" },
+                */
             }
         } else {
+            /*
+            // Validation Error
+            EMPTY_NICKNAME: { isSuccess: false, code: 3000, message: "Nickname is required." },
+            EMPTY_PASSWORD: { isSuccess: false, code: 3001, message: "Password is required." },
+            LENGTH_NICKNAME: { isSuccess: false, code: 3002, message: "Nickname must be between 4 and 8 letters long." },
+            LENGTH_PASSWORD: { isSuccess: false, code: 3003, message: "Password must be between 4 and 10 letters long." },
+            NAN_SCORE: { isSuccess: false, code: 3004, message: "Score is not a number." },
+            // Wrong
+            NOT_MATCHED_PASSWORD: { isSuccess: false, code: 4000, message: "It's a wrong password." },
+            // Error
+            SERVER_ERROR: { isSuccess: false, code: 5000, message: "Server Error!" },
+            */
         }
     } catch (error) {
-        // TODO: fetch ERROR : ex) server is not running
+        // TODO: fetch ERROR: ex) server is not running
         console.log(error);
     }
 }
