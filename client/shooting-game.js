@@ -11,7 +11,8 @@ const loginBtn = document.getElementById("login-btn");
 
 const scoreBoardDiv = document.getElementById("score-board-div");
 const boardStartBtn = document.getElementById("board-start-btn");
-const scoreInput = document.querySelector("#login-div > form > input:first-child");
+const nicknameInput = document.getElementById("nickname-input");
+const passwordInput = document.getElementById("password-input");
 
 //canvas
 const canvas = document.querySelector("canvas");
@@ -287,11 +288,40 @@ saveBtn.addEventListener("click", () => {
     loginDiv.classList.remove(HIDDEN);
 });
 
+// Ajax
+async function postLogin(nickname, password, score) {
+    const res = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nickname, password, score }),
+    });
+
+    if (!res.ok) throw new Error("Login Ajax Error!");
+
+    const result = await res.json();
+    return result;
+}
+async function getScoreBoard() {
+    const res = await fetch("http://localhost:3000/score-board");
+
+    if (!res.ok) throw new Error("Get Score Board Ajax Error!");
+
+    const result = await res.json();
+    return result;
+}
+
 loginBtn.addEventListener("click", (e) => {
     loginDiv.classList.add(HIDDEN);
     scoreBoardDiv.classList.remove(HIDDEN);
-    scoreInput.value = inGameScoreSpan.innerHTML;
+    // scoreInput.value = inGameScoreSpan.innerHTML;
     // TODO: respose message -> elemets -> render
     // [POST] hostname:3000/login
     // [GET] hostname:3000/score-borad
+    const postNickname = nicknameInput.value;
+    const postPassword = passwordInput.value;
+    const postScore = parseInt(inGameScoreSpan.innerHTML);
+    postLogin(postNickname, postPassword, postScore).then((res) => {
+        console.log(res);
+        const socreList = await getScoreBoard();
+    });
 });

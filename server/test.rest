@@ -3,9 +3,9 @@ POST http://localhost:3000/login HTTP/1.1
 content-type: application/json
 
 {
-    "nickname": "user3",
-    "password": "password3",
-    "score": 2500
+    "nickname": "user5",
+    "password": "password5",
+    "score": 3500
 }
 
 ### [GET] score board
