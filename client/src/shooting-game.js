@@ -13,6 +13,7 @@ const scoreBoardDiv = document.getElementById("score-board-div");
 const boardStartBtn = document.getElementById("board-start-btn");
 const nicknameInput = document.getElementById("nickname-input");
 const passwordInput = document.getElementById("password-input");
+const table = document.getElementById("score-board");
 
 //canvas
 const canvas = document.querySelector("canvas");
@@ -295,33 +296,50 @@ async function postLogin(nickname, password, score) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nickname, password, score }),
     });
-
     if (!res.ok) throw new Error("Login Ajax Error!");
-
     const result = await res.json();
     return result;
 }
 async function getScoreBoard() {
     const res = await fetch("http://localhost:3000/score-board");
-
     if (!res.ok) throw new Error("Get Score Board Ajax Error!");
-
     const result = await res.json();
     return result;
 }
-
-loginBtn.addEventListener("click", (e) => {
+async function loginBtnHandler() {
     loginDiv.classList.add(HIDDEN);
     scoreBoardDiv.classList.remove(HIDDEN);
-    // scoreInput.value = inGameScoreSpan.innerHTML;
-    // TODO: respose message -> elemets -> render
-    // [POST] hostname:3000/login
-    // [GET] hostname:3000/score-borad
+
     const postNickname = nicknameInput.value;
     const postPassword = passwordInput.value;
     const postScore = parseInt(inGameScoreSpan.innerHTML);
-    postLogin(postNickname, postPassword, postScore).then((res) => {
-        console.log(res);
-        const socreList = await getScoreBoard();
-    });
-});
+    try {
+        const loginResult = await postLogin(postNickname, postPassword, postScore);
+        if (loginResult.isSuccess) {
+            const scoreBoardResult = await getScoreBoard();
+            if (scoreBoardResult.isSuccess) {
+                const records = scoreBoardResult.result;
+
+                records.forEach((record) => {
+                    const tr = document.createElement("tr");
+                    const tdRank = document.createElement("td");
+                    const tdNickname = document.createElement("td");
+                    const tdScore = document.createElement("td");
+                    tdRank.innerHTML = record.ranking;
+                    tdNickname.innerHTML = record.nickname;
+                    tdScore.innerHTML = record.score;
+
+                    tr.append(tdRank, tdNickname, tdScore);
+                    table.appendChild(tr);
+                });
+            } else {
+            }
+        } else {
+        }
+    } catch (error) {
+        // TODO: fetch ERROR : ex) server is not running
+        console.log(error);
+    }
+}
+
+loginBtn.addEventListener("click", loginBtnHandler);
