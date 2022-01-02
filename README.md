@@ -18,30 +18,29 @@
 
 ```
 .
-├── server
-│   ├── test.rest
-│   ├── src
-│   │   ├── scoreBoard
-│   │   │   ├── rankProvider.js
-│   │   │   ├── rankDao.js
-│   │   │   └── rankController.js
-│   │   ├── login
-│   │   │   ├── loginProvider.js
-│   │   │   ├── loginDao.js
-│   │   │   └── loginController.js
-│   │   └── lib
-│   │       ├── responseMessage.js
-│   │       └── dbSecret.js
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── config
-│   │   ├── router.js
-│   │   └── express.js
-│   └── app.js
+├── README.md
 ├── client
-│   ├── src
-│   │   ├── shooting-game.js
-│   │   └── ajax.js
-│   └── index.html
-└── README.md
+│   ├── index.html
+│   └── src
+│       └── shooting-game.js
+└── server
+    ├── app.js
+    ├── config
+    │   ├── express.js
+    │   └── router.js
+    ├── package-lock.json
+    ├── package.json
+    ├── src
+    │   ├── lib
+    │   │   ├── dbSecret.js
+    │   │   └── responseMessage.js
+    │   ├── login
+    │   │   ├── loginController.js
+    │   │   ├── loginDao.js
+    │   │   └── loginProvider.js
+    │   └── scoreBoard
+    │       ├── rankController.js
+    │       ├── rankDao.js
+    │       └── rankProvider.js
+    └── test.rest
 ```
