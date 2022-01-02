@@ -1,13 +1,18 @@
 # Toy Project 1
 
-## Shooting Game Using Canvas
+### Shooting Game Using Canvas
 
-using ...
+## using ...
+
+### client
 
 -   vanillaJS
 -   canvas API
 -   fetch API
 -   tailwindcss
+
+### server
+
 -   NodeJS(express)
 -   MySQL
 
