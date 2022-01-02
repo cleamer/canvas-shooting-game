@@ -15,6 +15,7 @@ const nicknameInput = document.getElementById("nickname-input");
 const passwordInput = document.getElementById("password-input");
 const table = document.getElementById("score-board");
 const myRankH1 = document.getElementById("my-rank");
+const warningH1 = document.getElementById("warning-h1");
 
 //canvas
 const canvas = document.querySelector("canvas");
@@ -319,6 +320,14 @@ function drawRecord(record) {
     tr.append(tdRank, tdNickname, tdScore);
     table.appendChild(tr);
 }
+function warnig(message) {
+    warningH1.innerHTML = message;
+    warningH1.classList.remove(HIDDEN);
+}
+function goScoreBoard() {
+    loginDiv.classList.add(HIDDEN);
+    scoreBoardDiv.classList.remove(HIDDEN);
+}
 
 async function loginBtnHandler() {
     const postNickname = nicknameInput.value;
@@ -327,20 +336,16 @@ async function loginBtnHandler() {
     try {
         const loginResult = await postLogin(postNickname, postPassword, postScore);
         if (loginResult.isSuccess) {
-            /*
-            SUCCESS_LOW_SCORE: { isSuccess: true, code: 2000, message: "Less than saved score." },
-            SUCCESS_CREATE: { isSuccess: true, code: 2001, message: "It has been successed to create a new user." },
-            SUCCESS_UPDATE: { isSuccess: true, code: 2002, message: "It has been successed to update the new user." },
-            */
             const scoreBoardResult = await getScoreBoard();
             if (scoreBoardResult.isSuccess) {
-                // SUCCESS_READ: { isSuccess: true, code: 2003, message: "Data has been received successfully." },
                 const records = scoreBoardResult.result;
+                // clear table and draw
                 table.innerHTML = "<tr><th>Rank</th><th>Nickname</th><th>score</th></tr>";
                 records.forEach((record) => {
                     if (record.nickname === postNickname) myRankH1.innerHTML = `Rank: ${record.ranking}`;
                     drawRecord(record);
                 });
+                goScoreBoard();
             } else {
                 /*
                 NOT_MATCHED_NICKNAEM: { isSuccess: false, code: 4001, message: "There is no record by that nickname." },
@@ -348,26 +353,13 @@ async function loginBtnHandler() {
                 */
             }
         } else {
-            /*
-            // Validation Error
-            EMPTY_NICKNAME: { isSuccess: false, code: 3000, message: "Nickname is required." },
-            EMPTY_PASSWORD: { isSuccess: false, code: 3001, message: "Password is required." },
-            LENGTH_NICKNAME: { isSuccess: false, code: 3002, message: "Nickname must be between 4 and 8 letters long." },
-            LENGTH_PASSWORD: { isSuccess: false, code: 3003, message: "Password must be between 4 and 10 letters long." },
-            NAN_SCORE: { isSuccess: false, code: 3004, message: "Score is not a number." },
-            // Wrong
-            NOT_MATCHED_PASSWORD: { isSuccess: false, code: 4000, message: "It's a wrong password." },
-            // Error
-            SERVER_ERROR: { isSuccess: false, code: 5000, message: "Server Error!" },
-            */
+            // login exception
+            warnig(loginResult.message);
         }
     } catch (error) {
         // TODO: fetch ERROR: ex) server is not running
         console.log(error);
     }
-
-    loginDiv.classList.add(HIDDEN);
-    scoreBoardDiv.classList.remove(HIDDEN);
 }
 
 loginBtn.addEventListener("click", loginBtnHandler);
