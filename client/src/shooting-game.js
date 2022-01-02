@@ -320,6 +320,14 @@ function drawRecord(record) {
     tr.append(tdRank, tdNickname, tdScore);
     table.appendChild(tr);
 }
+function drawTable(myNickname, records) {
+    // clear table and draw
+    table.innerHTML = "<tr><th>Rank</th><th>Nickname</th><th>score</th></tr>";
+    records.forEach((record) => {
+        if (record.nickname === myNickname) myRankH1.innerHTML = `Rank: ${record.ranking}`;
+        drawRecord(record);
+    });
+}
 function warnig(message) {
     warningH1.innerHTML = message;
     warningH1.classList.remove(HIDDEN);
@@ -327,6 +335,7 @@ function warnig(message) {
 function goScoreBoard() {
     loginDiv.classList.add(HIDDEN);
     scoreBoardDiv.classList.remove(HIDDEN);
+    warningH1.classList.add(HIDDEN);
 }
 
 async function loginBtnHandler() {
@@ -338,13 +347,7 @@ async function loginBtnHandler() {
         if (loginResult.isSuccess) {
             const scoreBoardResult = await getScoreBoard();
             if (scoreBoardResult.isSuccess) {
-                const records = scoreBoardResult.result;
-                // clear table and draw
-                table.innerHTML = "<tr><th>Rank</th><th>Nickname</th><th>score</th></tr>";
-                records.forEach((record) => {
-                    if (record.nickname === postNickname) myRankH1.innerHTML = `Rank: ${record.ranking}`;
-                    drawRecord(record);
-                });
+                drawTable(postNickname, scoreBoardResult.result);
                 goScoreBoard();
             } else {
                 /*
