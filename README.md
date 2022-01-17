@@ -7,22 +7,13 @@ When you hit an enemy you will get points. When a big enemy is hit, a small enem
 <br>
 <br>
 
-# Screen shots
+# Index
 
-**Start**
-![Start](./img4README/start.png)
-
-**Play**
-![Play](./img4README/play.png)
-
-**Game Over**
-![Game Over](./img4README/game-over.png)
-
-**Login**
-![Login](./img4README/login.png)
-
-**Score Board**
-![Score Board](./img4README/score-board.png)
+- [Index](#index)
+- [Using...](#using-)
+- [File Structure](#file-structure)
+- [Screen shots](#screen-shots)
+- [TODO](#todo)
 
 <br>
 <br>
@@ -77,6 +68,26 @@ When you hit an enemy you will get points. When a big enemy is hit, a small enem
     │       └── rankProvider.js
     └── test.rest
 ```
+
+<br>
+<br>
+
+# Screen shots
+
+**Start**
+![Start](./img4README/start.png)
+
+**Play**
+![Play](./img4README/play.png)
+
+**Game Over**
+![Game Over](./img4README/game-over.png)
+
+**Login**
+![Login](./img4README/login.png)
+
+**Score Board**
+![Score Board](./img4README/score-board.png)
 
 <br>
 <br>
