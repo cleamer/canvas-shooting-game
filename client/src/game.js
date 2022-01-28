@@ -1,35 +1,15 @@
 "use strict";
-// DOM element
-const inGameScoreSpan = document.getElementById("in-game-score");
-const scoreDiv = document.getElementById("score-div");
-const scoreResultH1 = document.getElementById("game-score");
-const startBtn = document.getElementById("start-btn");
-const saveBtn = document.getElementById("save-btn");
 
-const loginDiv = document.getElementById("login-div");
-const loginBtn = document.getElementById("login-btn");
+import * as Controller from "./controller.js";
 
-const scoreBoardDiv = document.getElementById("score-board-div");
-const boardStartBtn = document.getElementById("board-start-btn");
-const nicknameInput = document.getElementById("nickname-input");
-const passwordInput = document.getElementById("password-input");
-const table = document.getElementById("score-board");
-const myRankH1 = document.getElementById("my-rank");
-const warningH1 = document.getElementById("warning-h1");
-
-//canvas
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// CSS class constant
-const HIDDEN = "hidden";
-
 /*
- * CLASS
+ * Game
  */
-
 class Circle {
   constructor(x, y, r, color) {
     this.x = x;
@@ -112,42 +92,21 @@ class Particle extends Circle {
   }
 }
 
-/*
- * INSTANCE
- */
-
-// Player instance
+// Instance
 const playerLoc = { x: canvas.width / 2, y: canvas.height / 2 };
 const player = new Player(playerLoc.x, playerLoc.y, playerSize, playerColor);
 
-// Bullets instance
 let bullets = [];
-
-// Enemies instance
 let enemies = [];
-
-// Particles instance
 let particles = [];
 
-/*
- * FUNCTIONS
- */
+// Functions
 const getDirection = (fromX, fromY, toX, toY) => {
   const angle = Math.atan2(toY - fromY, toX - fromX);
   return {
     x: Math.cos(angle),
     y: Math.sin(angle),
   };
-};
-
-const init = () => {
-  scoreDiv.classList.add(HIDDEN);
-  inGameScoreSpan.innerHTML = 0;
-  player.score = 0;
-  bullets = [];
-  enemies = [];
-  particles = [];
-  enemySpeed = enemySpeedInit;
 };
 
 let spawnInterver = null;
@@ -163,20 +122,9 @@ const spawnEnemies = () => {
       enemyLoc.x = Math.random() * canvas.width;
       enemyLoc.y = Math.random() < 0.5 ? -enemyR : canvas.height + enemyR;
     }
-    const enemyDirection = getDirection(
-      enemyLoc.x,
-      enemyLoc.y,
-      playerLoc.x,
-      playerLoc.y
-    );
+    const enemyDirection = getDirection(enemyLoc.x, enemyLoc.y, playerLoc.x, playerLoc.y);
     const enemyColor = `hsl(${Math.random() * 360}, 70%, 50%)`;
-    const enemy = new Enemy(
-      enemyLoc.x,
-      enemyLoc.y,
-      enemyR,
-      enemyColor,
-      enemyDirection
-    );
+    const enemy = new Enemy(enemyLoc.x, enemyLoc.y, enemyR, enemyColor, enemyDirection);
     enemies.push(enemy);
   }, spawnInterverTime);
 };
@@ -207,31 +155,20 @@ const animate = () => {
       bullets.splice(bulletIdx, 1);
     }
   });
-
   // enemies
   enemies.forEach((enemy, enemyIdx) => {
     enemy.update();
 
     // Crash enemy to player -> Game Over
-    const distEnemyPlayer = Math.hypot(
-      enemy.x - playerLoc.x,
-      enemy.y - playerLoc.y
-    );
+    const distEnemyPlayer = Math.hypot(enemy.x - playerLoc.x, enemy.y - playerLoc.y);
     if (distEnemyPlayer < enemy.r + playerSize + 1) {
       cancelAnimationFrame(animationId);
       clearInterval(spawnInterver);
-      scoreResultH1.innerHTML = player.score;
-      if (player.score > 0) saveBtn.classList.remove(HIDDEN);
-      else saveBtn.classList.add(HIDDEN);
-      scoreDiv.classList.remove(HIDDEN);
+      Controller.gameOver(player.score);
     }
-
     // Crash bullet to enemy
     bullets.forEach((bullet, bulletIdx) => {
-      const distEnemybullet = Math.hypot(
-        enemy.x - bullet.x,
-        enemy.y - bullet.y
-      );
+      const distEnemybullet = Math.hypot(enemy.x - bullet.x, enemy.y - bullet.y);
       if (distEnemybullet < enemy.r + bulletSize + 1) {
         setTimeout(() => {
           // make particles
@@ -249,7 +186,6 @@ const animate = () => {
               )
             );
           }
-
           // remove bullet crashed to enemy
           bullets.splice(bulletIdx, 1);
 
@@ -261,18 +197,16 @@ const animate = () => {
             });
             enemySpeed += 0.02;
             player.score += 100;
-            inGameScoreSpan.innerHTML = player.score;
           } else {
             enemy.r -= 10;
             enemySpeed += 0.013;
             player.score += 50;
-            inGameScoreSpan.innerHTML = player.score;
           }
+          Controller.scoreSpanUpdate(player.score);
         }, 0);
       }
     });
   });
-
   // Particles
   particles.forEach((particle, particleIdx) => {
     if (particle.alpha < 0) particles.splice(particleIdx, 1);
@@ -280,118 +214,26 @@ const animate = () => {
   });
 };
 
-const startGame = () => {
+const init = () => {
+  Controller.gameReady();
+  player.score = 0;
+  bullets = [];
+  enemies = [];
+  particles = [];
+  enemySpeed = enemySpeedInit;
+};
+const gameStart = () => {
   init();
   spawnEnemies();
   animate();
 };
 
-/*
- * EVENTS
- */
-
-window.addEventListener("click", (e) => {
-  const directionVector = getDirection(
-    playerLoc.x,
-    playerLoc.y,
-    e.clientX,
-    e.clientY
-  );
-  const bullet = new Bullet(
-    playerLoc.x,
-    playerLoc.y,
-    bulletSize,
-    bulletColor,
-    directionVector
-  );
+// Control
+const shootBullets = function (e) {
+  const directionVector = getDirection(playerLoc.x, playerLoc.y, e.clientX, e.clientY);
+  const bullet = new Bullet(playerLoc.x, playerLoc.y, bulletSize, bulletColor, directionVector);
   bullets.push(bullet);
-});
+};
+window.addEventListener("click", shootBullets); // TODO: 끊었다가 게임 시작 시 다시 연결 -> pop up 에서 이벤트발생안하게
 
-startBtn.addEventListener("click", startGame);
-
-boardStartBtn.addEventListener("click", () => {
-  scoreBoardDiv.classList.add(HIDDEN);
-  startGame();
-});
-
-saveBtn.addEventListener("click", () => {
-  scoreDiv.classList.add(HIDDEN);
-  loginDiv.classList.remove(HIDDEN);
-});
-
-// Ajax
-async function postLogin(nickname, password, score) {
-  const res = await fetch("http://localhost:3000/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nickname, password, score }),
-  });
-  if (!res.ok) throw new Error("Login Ajax Error!");
-  const result = await res.json();
-  return result;
-}
-async function getScoreBoard() {
-  const res = await fetch("http://localhost:3000/score-board");
-  if (!res.ok) throw new Error("Get Score Board Ajax Error!");
-  const result = await res.json();
-  return result;
-}
-function drawRecord(record) {
-  const tr = document.createElement("tr");
-  const tdRank = document.createElement("td");
-  const tdNickname = document.createElement("td");
-  const tdScore = document.createElement("td");
-  tdRank.innerHTML = record.ranking;
-  tdNickname.innerHTML = record.nickname;
-  tdScore.innerHTML = record.score;
-
-  tr.append(tdRank, tdNickname, tdScore);
-  table.appendChild(tr);
-}
-function drawTable(myNickname, records) {
-  // clear table and draw
-  table.innerHTML = "<tr><th>Rank</th><th>Nickname</th><th>score</th></tr>";
-  records.forEach((record) => {
-    if (record.nickname === myNickname)
-      myRankH1.innerHTML = `Rank: ${record.ranking}`;
-    drawRecord(record);
-  });
-}
-function warnig(message) {
-  warningH1.innerHTML = message;
-  warningH1.classList.remove(HIDDEN);
-}
-function goScoreBoard() {
-  loginDiv.classList.add(HIDDEN);
-  scoreBoardDiv.classList.remove(HIDDEN);
-  warningH1.classList.add(HIDDEN);
-}
-
-async function loginBtnHandler() {
-  const postNickname = nicknameInput.value;
-  const postPassword = passwordInput.value;
-  const postScore = parseInt(inGameScoreSpan.innerHTML);
-  try {
-    const loginResult = await postLogin(postNickname, postPassword, postScore);
-    if (loginResult.isSuccess) {
-      const scoreBoardResult = await getScoreBoard();
-      if (scoreBoardResult.isSuccess) {
-        drawTable(postNickname, scoreBoardResult.result);
-        goScoreBoard();
-      } else {
-        /*
-                NOT_MATCHED_NICKNAEM: { isSuccess: false, code: 4001, message: "There is no record by that nickname." },
-                DB_NO_RECORD_ERROR: { isSuccess: false, code: 5001, message: "There is no record!" },
-                */
-      }
-    } else {
-      // login exception
-      warnig(loginResult.message);
-    }
-  } catch (error) {
-    // TODO: fetch ERROR: ex) server is not running
-    console.log(error);
-  }
-}
-
-loginBtn.addEventListener("click", loginBtnHandler);
+export default gameStart;

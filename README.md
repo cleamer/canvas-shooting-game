@@ -9,10 +9,9 @@ When you hit an enemy you will get points. When a big enemy is hit, a small enem
 
 # Index
 
-- [Index](#index)
 - [Using...](#using-)
 - [File Structure](#file-structure)
-- [Screen shots](#screen-shots)
+- [Screen Shots](#screen-shots)
 - [TODO](#todo)
 
 <br>
@@ -22,10 +21,10 @@ When you hit an enemy you will get points. When a big enemy is hit, a small enem
 
 ### Client
 
-- vanillaJS
-- canvas API
-- fetch API
-- tailwindcss
+- VanillaJS
+- Canvas API
+- Fetch API
+- Tailwindcss
 
 ### Server
 
@@ -40,13 +39,14 @@ When you hit an enemy you will get points. When a big enemy is hit, a small enem
 ```
 .
 ├── README.md
-├── img4README
-├── package-lock.json
 ├── client
 │   ├── index.html
 │   └── src
-│       ├── fetch.js
-│       └── shooting-game.js
+│       ├── controller.js
+│       ├── game.js
+│       ├── index.js
+│       └── model.js
+├── img4README
 └── server
     ├── app.js
     ├── config
@@ -94,4 +94,5 @@ When you hit an enemy you will get points. When a big enemy is hit, a small enem
 
 # TODO
 
-- modularize `shooting-game.js`
+✅ modularize `client`  
+⬜️ build `view` in MVC model using `react`

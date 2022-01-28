@@ -1,82 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Shooting Game</title>
-        <style type="text/css">
-            body {
-                margin: 0;
-                background-color: black;
-            }
-            table {
-                width: 100%;
-                border-collapse: separate;
-                border-spacing: 0 10px;
-            }
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shooting Game</title>
+    <style type="text/css">
+      body {
+        margin: 0;
+        background-color: black;
+      }
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="fixed text-white ml-2 mt-1 select-none"><span>Score: </span><span id="in-game-score">0</span></div>
 
-            /* #score-board-div tr > td:nth-child(1) {
-                background-color: red;
-            }
-            #score-board-div tr > td:nth-child(2) {
-                background-color: blue;
-            }
-            #score-board-div tr > td:nth-child(3) {
-                background-color: green;
-            } */
-        </style>
-        <script src="https://cdn.tailwindcss.com"></script>
-    </head>
-    <body>
-        <div class="fixed text-white ml-2 mt-1 select-none"><span>Score: </span><span id="in-game-score">0</span></div>
-
-        <div class="fixed flex inset-0 items-center justify-center">
-            <div id="score-div" class="bg-white max-w-md w-full p-7 text-center rounded-md">
-                <h1 id="game-score" class="text-4xl font-bold leading-none">0</h1>
-                <p class="text-sm text-gray-700 mb-4">Points</p>
-                <div>
-                    <button id="start-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg">Game Start</button>
-                    <button id="save-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg mt-2 hidden">Save</button>
-                </div>
-            </div>
-            <div id="login-div" class="bg-white max-w-md w-full p-7 text-center rounded-md hidden">
-                <h1 id="warning-h1" class="text-2xl leading-none mb-4 hidden">Warning</h1>
-                <input
-                    id="nickname-input"
-                    type="text"
-                    name="nickname"
-                    placeholder="Nickname"
-                    minlength="4"
-                    maxlength="8"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
-                />
-                <input
-                    id="password-input"
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    minlength="4"
-                    maxlength="10"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 mt-1 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
-                />
-                <button id="login-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg mt-2">Save</button>
-            </div>
-            <div id="score-board-div" class="bg-white max-w-md w-full p-7 text-center rounded-md hidden">
-                <h1 id="my-rank" class="text-4xl font-bold leading-none mb-10">Unranked</h1>
-                <table id="score-board" class="mb-8">
-                    <tr>
-                        <th>Rank</th>
-                        <th>Nickname</th>
-                        <th>score</th>
-                    </tr>
-                </table>
-                <button id="board-start-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg">Game Start</button>
-            </div>
+    <div class="fixed flex inset-0 items-center justify-center">
+      <div id="score-div" class="bg-white max-w-md w-full p-7 text-center rounded-md">
+        <h1 id="game-score" class="text-4xl font-bold leading-none">0</h1>
+        <p class="text-sm text-gray-700 mb-4">Points</p>
+        <div>
+          <button id="start-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg">Game Start</button>
+          <button id="save-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg mt-2 hidden">Save</button>
         </div>
+      </div>
+      <div id="login-div" class="bg-white max-w-md w-full p-7 text-center rounded-md hidden">
+        <h1 id="warning-h1" class="text-2xl leading-none mb-4 hidden">Warning</h1>
+        <input
+          id="nickname-input"
+          type="text"
+          name="nickname"
+          placeholder="Nickname"
+          minlength="4"
+          maxlength="8"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+        />
+        <input
+          id="password-input"
+          type="password"
+          name="password"
+          placeholder="Password"
+          minlength="4"
+          maxlength="10"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 mt-1 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+        />
+        <button id="login-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg mt-2">Save</button>
+      </div>
+      <div id="score-board-div" class="bg-white max-w-md w-full p-7 text-center rounded-md hidden">
+        <h1 id="my-rank" class="text-4xl font-bold leading-none mb-10">Unranked</h1>
+        <table id="score-board" class="mb-8">
+          <tr>
+            <th>Rank</th>
+            <th>Nickname</th>
+            <th>score</th>
+          </tr>
+        </table>
+        <button id="board-start-btn" class="bg-blue-500 text-white w-full py-3 rounded-full hover:bg-sky-400 drop-shadow-lg">Game Start</button>
+      </div>
+    </div>
 
-        <canvas class="bg-black"></canvas>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-        <script src="./src/shooting-game.js"></script>
-    </body>
+    <canvas class="bg-black"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script type="module" src="./src/index.js"></script>
+  </body>
 </html>
