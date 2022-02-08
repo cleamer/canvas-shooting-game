@@ -1,5 +1,5 @@
 import LoginPopUp from "./LoginPopUp.js";
 import ScoreBoard from "./ScoreBoard.js";
-import StartPopUp from "./StartPopUp.js";
+import ScorePopUp from "./ScoreDiv.js";
 
-export { LoginPopUp, ScoreBoard, StartPopUp };
+export { LoginPopUp, ScoreBoard, ScorePopUp };
