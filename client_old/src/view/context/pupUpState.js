@@ -1,0 +1,1 @@
+let popUpState = 'score-div';

@@ -1,6 +1,11 @@
-import * as Controller from "./controller.js";
+import gameStart from '../lib/game.js';
 
-function Canvas() {}
+function Canvas() {
+  const canvas = document.createElement('canvas');
+  canvas.classList.add('bg-black');
+  canvas.addEventListener(gameStart);
+  return canvas;
+}
 
 export default Canvas;
 
