@@ -10,8 +10,7 @@ module.exports = function () {
   app.use(express.json());
 
   // for ajax on localhost
-  const cors = require('cors');
-  app.use(cors());
+  app.use(require('cors')());
 
   require('./router')(app);
 

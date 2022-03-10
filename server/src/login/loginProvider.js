@@ -1,12 +1,12 @@
-"use strick";
+'use strick';
 
 // Library
-const mysql = require("mysql2/promise");
-const myDB = require("../lib/dbSecret");
-const pool = mysql.createPool(myDB);
+const mysql = require('mysql2/promise');
+const myDB = require('../lib/dbSecret');
+const pool = mysql.createPool(myDB[process.env.NODE_ENV]);
 
 // Dao
-const loginDao = require("./loginDao");
+const loginDao = require('./loginDao');
 
 const checkNicknameForNo = async function (nickname) {
   const connection = await pool.getConnection(async (conn) => conn);
