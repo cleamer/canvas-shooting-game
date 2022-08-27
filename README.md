@@ -75,19 +75,19 @@ When you hit an enemy you will get points. When a big enemy is hit, a small enem
 # Screen shots
 
 **Start**
-![Start](./img4README/start.png)
+![Start](https://raw.githubusercontent.com/cloer-Choi/canvas-shooting-game/main/img4README/start.png)
 
 **Play**
-![Play](./img4README/play.png)
+![Play](https://raw.githubusercontent.com/cloer-Choi/canvas-shooting-game/main/img4README/play.png)
 
 **Game Over**
-![Game Over](./img4README/game-over.png)
+![Game Over](https://raw.githubusercontent.com/cloer-Choi/canvas-shooting-game/main/img4README/game-over.png)
 
 **Login**
-![Login](./img4README/login.png)
+![Login](https://raw.githubusercontent.com/cloer-Choi/canvas-shooting-game/main/img4README/login.png)
 
 **Score Board**
-![Score Board](./img4README/score-board.png)
+![Score Board](https://raw.githubusercontent.com/cloer-Choi/canvas-shooting-game/main/img4README/score-board.png)
 
 <br>
 <br>
